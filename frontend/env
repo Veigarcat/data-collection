@@ -1,0 +1,24 @@
+PORT=8080
+
+# DOMAIN
+REACT_APP_API_DOMAIN=http://localhost:3000
+REACT_APP_SOCKET_URL=wss://dev-chat.iristech.club
+REACT_APP_API_ID=44b08189-ea19-4dfe-b549-bd87d8b8ac8d
+REACT_APP_JWT_EXPIRES_TIME=5259600000
+
+REACT_APP_SSO_DOMAIN=https://dev-sso.iristech.club
+REACT_APP_CLIENT_ID=811ef57a-3100-464e-8983-ab358c635142
+REACT_APP_REDIRECT_URI=http://localhost:8080
+
+
+# UPLOAD
+REACT_APP_UPLOAD_AUTH_KEY=zyvZQGPrr6qdbHLTuzqpCmuBgW3TjTxGKEEIFCiy1lCAOzTBtrqPYdPdZ1AtMxU2
+
+# SLU
+REACT_APP_SLU_BACKEND_DOMAIN=https://dev-slu.iristech.club
+REACT_APP_SLU_UPLOAD_API=https://asr.vbeecore.com
+
+
+# ASR
+REACT_APP_ASR_APP=https://dev-asr.iristech.club
+REACT_APP_UPLOAD_DATA=https://asr.vbeecore.com
