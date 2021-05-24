@@ -10,7 +10,7 @@ const userTypes = {
     TEXT: 'TEXT',
     IMAGE: 'IMAGE',
     VIDEO: 'VIDEO',
-    VOICE: 'VOICE',
+    AUDIO: 'AUDIO',
     FILE: 'FILE',
     OPTION: 'OPTION',
     PERSONALIZE_TEXT: 'PERSONALIZE_TEXT',

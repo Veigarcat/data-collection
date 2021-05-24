@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from '@material-ui/styles';
 import './index.css';
 import { createBrowserHistory } from 'history';
 import { ToastContainer } from 'react-toastify';
@@ -14,21 +13,19 @@ import * as serviceWorker from './serviceWorker';
 import './languages';
 import Router from './router';
 import store from './redux/store';
-import theme from './theme';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 const history = createBrowserHistory();
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Provider store={store()}>
-          <ToastContainer />
-          <Router history={history} />
-        </Provider>
-      </MuiPickersUtilsProvider>
-    </ThemeProvider>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Provider store={store()}>
+        <ToastContainer />
+        <Router history={history} />
+      </Provider>
+    </MuiPickersUtilsProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

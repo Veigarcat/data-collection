@@ -18,11 +18,7 @@ export default function NavigationContainer({ navLink }) {
                   {sub.title}
                 </Link>
               ) : (
-                <Typography
-                  color="textPrimary"
-                  className="link-navigation"
-                  key={sub.title}
-                >
+                <Typography color="textPrimary" className="link-navigation">
                   {sub.title}
                 </Typography>
               ),

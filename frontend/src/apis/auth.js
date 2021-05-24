@@ -1,29 +1,19 @@
-import axios from 'axios';
-import { getCookie } from '../utils/cookie';
+import api from './api';
 
-const accessToken = getCookie('accessToken');
-const axiosInstance = axios.create({
-  method: 'POST',
-  headers: {
-    Authorization: `Bearer ${accessToken}`,
-  },
-});
-
-export async function apiLogout() {
-  const options = {
-    url: 'https://dev-sso.iristech.club/api/v1/auths/logout',
-  };
-  const signUpData = await axiosInstance(options);
-  return signUpData;
+export async function login({ email, password }) {
+  const loginInfo = await api({
+    method: 'POST',
+    url: '/auths/login',
+    data: { email, password },
+  });
+  return loginInfo;
 }
 
-export async function verify(token) {
-  const response = await axios({
-    method: 'GET',
-    url: `${process.env.REACT_APP_API_DOMAIN}/api/v1/auths/verify`,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+export async function signUp(payload) {
+  const signUpData = await api({
+    method: 'POST',
+    url: '/auths/register',
+    data: payload,
   });
-  return response;
+  return signUpData;
 }

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import {
   Typography,
   Card,
+  CardContent,
   Input,
   FormControl,
   TableContainer,
@@ -20,10 +21,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import NumberFormat from 'react-number-format';
 import { useTranslation } from 'react-i18next';
 import ButtonAdd from '../../../components/ButtonAdd';
+import TitleHeader from '../../../components/TitleHeader';
 import CalculatorScoreStyle from './calculatorScore.style';
 import { LIST_CRITERIA } from '../../../constants/params';
 
-export default function CalculatorScore({ campaign, setCampaign, pageType }) {
+export default function CalculatorScore({ campaign, setCampaign }) {
   const { t } = useTranslation();
   const [criteria, setCriteria] = useState({
     id: '',
@@ -98,14 +100,10 @@ export default function CalculatorScore({ campaign, setCampaign, pageType }) {
   };
   return (
     <CalculatorScoreStyle>
-      <Card className="card">
-        <div className="cardHeader">
-          <Typography variant="h5" className="headerText">
-            {t('scoringMethod')}
-          </Typography>
-        </div>
-        <div className="cardBody">
-          {pageType !== 'view' && (
+      <div className="card">
+        <Card className="card-container">
+          <TitleHeader title="Cách tính điểm" />
+          <CardContent>
             <div className="add-criteria">
               <div className="select-criteria">
                 <Grid container className="select-container">
@@ -167,25 +165,25 @@ export default function CalculatorScore({ campaign, setCampaign, pageType }) {
                 Thêm
               </ButtonAdd>
             </div>
-          )}
-          <TableContainer className="table-container">
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Tiêu chí </TableCell>
-                  <TableCell align="right">Điểm</TableCell>
-                  {pageType !== 'view' && <TableCell align="right" />}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {campaign.criteria.length > 0 &&
-                  campaign.criteria.map((criteriaItem) => (
-                    <TableRow key={criteriaItem.id}>
-                      <TableCell component="th" scope="row">
-                        {criteriaItem.name}
-                      </TableCell>
-                      <TableCell align="right">{criteriaItem.point}</TableCell>
-                      {pageType !== 'view' && (
+            <TableContainer className="table-container">
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Tiêu chí </TableCell>
+                    <TableCell align="right">Điểm</TableCell>
+                    <TableCell align="right" />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {campaign.criteria &&
+                    campaign.criteria.map((criteriaItem) => (
+                      <TableRow key={criteriaItem.id}>
+                        <TableCell component="th" scope="row">
+                          {criteriaItem.name}
+                        </TableCell>
+                        <TableCell align="right">
+                          {criteriaItem.point}
+                        </TableCell>
                         <TableCell>
                           <EditIcon
                             className="icon icon-edit"
@@ -197,19 +195,19 @@ export default function CalculatorScore({ campaign, setCampaign, pageType }) {
                             onClick={() => handleDeleteCriteria(criteriaItem)}
                           />
                         </TableCell>
-                      )}
+                      </TableRow>
+                    ))}
+                  {!campaign.criteria && (
+                    <TableRow>
+                      <TableCell colSpan={3}>Chưa có giá trị</TableCell>
                     </TableRow>
-                  ))}
-                {!campaign.criteria.length && pageType !== 'create' && (
-                  <TableRow>
-                    <TableCell colSpan={3}>{t('noDataAvailable')}</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
-      </Card>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
+      </div>
     </CalculatorScoreStyle>
   );
 }

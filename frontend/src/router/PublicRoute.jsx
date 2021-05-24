@@ -10,7 +10,6 @@ export default function PublicRoute({
   ...rest
 }) {
   const accessToken = useSelector((state) => state.auth.accessToken);
-  console.log('public router');
 
   return (
     <Route

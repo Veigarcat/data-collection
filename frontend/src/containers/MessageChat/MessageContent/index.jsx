@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import {
@@ -11,8 +10,10 @@ import {
   InputBase,
   Typography,
   Button,
-  Icon,
 } from '@material-ui/core';
+import CommentIcon from '@material-ui/icons/Comment';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import sanitizeHtml from 'sanitize-html';
@@ -34,7 +35,6 @@ export default function MessageContent({
   endScroll,
   isTopScroll,
   scrollBottom,
-  getInfoConfirmMsg,
 }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -44,9 +44,6 @@ export default function MessageContent({
   const [isShown, setIsShown] = useState([]);
 
   useEffect(() => {
-    if (messages.length === 0) {
-      setStandardMessages([]);
-    }
     if (messages.length) {
       setStandardMessages(
         messages.map((message) => {
@@ -90,32 +87,19 @@ export default function MessageContent({
   };
   const handleKeyUp = (event, message) => {
     if (event.key === 'Enter') {
-      dispatch(
-        handleCommentMessage({
-          messageId: message.messageId,
-          textComment: comment,
-        }),
-      );
+      dispatch(handleCommentMessage({ id: message.id, textComment: comment }));
     }
   };
   const handleChangeConfirm = (message) => {
     dispatch(
       handleConfirmMessage({
-        messageId: message.messageId,
+        id: message.id,
         isConfirm: !message.isConfirm,
       }),
     );
-    if (message.nlu && message.nlu.intentId) {
-      getInfoConfirmMsg(message.nlu.intentId);
-    }
   };
-  const onIsShowComment = (message) => {
-    dispatch(handleIsShowComment({ messageId: message.messageId }));
-    if (message.textComment) {
-      setComment(message.textComment);
-    } else {
-      setComment('');
-    }
+  const IsShowComment = (message) => {
+    dispatch(handleIsShowComment({ id: message.id }));
   };
 
   const handleOption = (label) => {
@@ -177,7 +161,7 @@ export default function MessageContent({
             )}
           </Tooltip>
         );
-      case messageTypes.VOICE:
+      case messageTypes.AUDIO:
         return (
           <Tooltip
             title={
@@ -189,22 +173,22 @@ export default function MessageContent({
               <div className="message-client">
                 {url ? (
                   // eslint-disable-next-line jsx-a11y/media-has-caption
-                  <voice className="media" controls>
+                  <audio className="media" controls>
                     <source src={url} />
-                  </voice>
+                  </audio>
                 ) : (
-                  `[${t('voice')}]`
+                  `[${t('audio')}]`
                 )}
               </div>
             ) : (
               <div className="message-server">
                 {url ? (
                   // eslint-disable-next-line jsx-a11y/media-has-caption
-                  <voice className="media" controls>
+                  <audio className="media" controls>
                     <source src={url} />
-                  </voice>
+                  </audio>
                 ) : (
-                  `[${t('voice')}]`
+                  `[${t('audio')}]`
                 )}
               </div>
             )}
@@ -340,8 +324,8 @@ export default function MessageContent({
         <>
           <ListItemAvatar
             className={`avatar-wrapper ${message.id}`}
-            // onMouseEnter={() => handleShowBonusMessage(index, true)}
-            // onMouseLeave={() => handleShowBonusMessage(index, false)}
+            onMouseEnter={() => handleShowBonusMessage(index, true)}
+            onMouseLeave={() => handleShowBonusMessage(index, false)}
           >
             {avatar(message)}
             <div className="list-item-text">
@@ -352,43 +336,28 @@ export default function MessageContent({
                   text: message.content.text,
                 })}
               />
-              <div className="response-right">
-                {/* {isShown[index] && (
-                  <> */}
-                <Tooltip
-                  title={t('Câu trả lời bot đoán đúng ')}
-                  placement="top"
-                >
-                  <Icon className="parameter__icon success">check_circle</Icon>
-                </Tooltip>
-                <div
-                  className="heart-comment-icon"
-                  onClick={() => handleChangeConfirm(message)}
-                >
-                  {message.isConfirm ? (
-                    <Tooltip
-                      title={t('Câu trả lời đã được xác nhận')}
-                      placement="top"
-                    >
-                      <Icon className="parameter__icon heart">favorite</Icon>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title={t('Thả tim để xác nhận')} placement="top">
-                      <Icon className="parameter__icon ">favorite_border</Icon>
-                    </Tooltip>
-                  )}
-                </div>
-                <Tooltip title={t('Đóng góp ý kiến')} placement="top">
-                  <Icon
-                    className="parameter__icon review"
-                    onClick={() => onIsShowComment(message)}
+            </div>
+            <div className="response-right">
+              {isShown[index] && (
+                <>
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    className="heart-comment-icon"
+                    onClick={() => handleChangeConfirm(message)}
                   >
-                    rate_review
-                  </Icon>
-                </Tooltip>
-                {/* </>
-                )} */}
-              </div>
+                    {message.isConfirm ? (
+                      <FavoriteIcon className="icon icon-favorite" />
+                    ) : (
+                      <FavoriteBorderIcon className="icon" />
+                    )}
+                  </div>
+                  <CommentIcon
+                    className="icon comment-icon"
+                    onClick={() => IsShowComment(message)}
+                  />
+                </>
+              )}
             </div>
           </ListItemAvatar>
           {message.textComment && !message.isShowComment && (
@@ -460,50 +429,28 @@ export default function MessageContent({
                         elements,
                       })}
                     />
-                    <div className="response-right">
-                      <Tooltip
-                        title={t('Câu trả lời bot đoán đúng ')}
-                        placement="top"
-                      >
-                        <Icon className="parameter__icon success">
-                          check_circle
-                        </Icon>
-                      </Tooltip>
-                      <div
-                        className="heart-comment-icon"
-                        onClick={() => handleChangeConfirm(message)}
-                      >
-                        {message.isConfirm ? (
-                          <Tooltip
-                            title={t('Câu trả lời đã được xác nhận')}
-                            placement="top"
-                          >
-                            <Icon className="parameter__icon heart">
-                              favorite
-                            </Icon>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip
-                            title={t('Thả tim để xác nhận')}
-                            placement="top"
-                          >
-                            <Icon className="parameter__icon ">
-                              favorite_border
-                            </Icon>
-                          </Tooltip>
-                        )}
-                      </div>
-                      <Tooltip title={t('Đóng góp ý kiến')} placement="top">
-                        <Icon
-                          className="parameter__icon review"
-                          onClick={() => onIsShowComment(message)}
+                  </div>
+                  <div className="response-right">
+                    {isShown[index] && (
+                      <>
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          className="heart-comment-icon"
+                          onClick={() => handleChangeConfirm(message)}
                         >
-                          rate_review
-                        </Icon>
-                      </Tooltip>
-                      {/* </>
-                )} */}
-                    </div>
+                          {message.isConfirm ? (
+                            <FavoriteIcon className="icon icon-favorite" />
+                          ) : (
+                            <FavoriteBorderIcon className="icon-unlike" />
+                          )}
+                        </div>
+                        <CommentIcon
+                          className="icon comment-icon"
+                          onClick={() => IsShowComment(message)}
+                        />
+                      </>
+                    )}
                   </div>
                 </ListItemAvatar>
                 {message.textComment && !message.isShowComment && (

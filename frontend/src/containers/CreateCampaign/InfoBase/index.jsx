@@ -3,38 +3,24 @@ import React from 'react';
 import {
   Typography,
   Card,
+  CardContent,
   Grid,
   InputBase,
+  TextareaAutosize,
   Button,
   Tooltip,
 } from '@material-ui/core';
 import { CloudUpload } from '@material-ui/icons';
 import { DateTimePicker } from '@material-ui/pickers';
 import { useTranslation } from 'react-i18next';
-import { Editor } from 'react-draft-wysiwyg';
-import { convertToRaw } from 'draft-js';
 import Moment from 'moment';
-import './editor.css';
-
 import { toastMsgError } from '../../../commons/Toastify';
 import InfoBaseStyle from './infoBase.style';
+import TitleHeader from '../../../components/TitleHeader';
 
-export default function InfoBase({
-  campaign,
-  onHandleCampaign,
-  setCampaign,
-  pageType,
-  editorStateDesc,
-  setEditorStateDesc,
-}) {
+export default function InfoBase({ campaign, onHandleCampaign, setCampaign }) {
   const { t } = useTranslation();
-  const onEditorStateChange = async (editorState) => {
-    setEditorStateDesc(editorState);
-    await setCampaign((prev) => ({
-      ...prev,
-      desc: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
-    }));
-  };
+
   const handleFileSelected = () => async (e) => {
     const formData = new FormData();
     const file = e.target.files[0];
@@ -51,12 +37,12 @@ export default function InfoBase({
 
   const onChangeTimeEnd = (date) => {
     if (
-      Moment(date).isSameOrAfter(new Date()) &&
-      Moment(date).isSameOrAfter(campaign.timeStart)
+      Moment(date).isSameOrBefore(new Date()) &&
+      Moment(date).isSameOrBefore(campaign.timeStart)
     ) {
       setCampaign((prev) => ({
         ...prev,
-        timeEnd: date,
+        timeStart: date,
       }));
     } else {
       toastMsgError(t('invalidDate'));
@@ -69,7 +55,7 @@ export default function InfoBase({
     ) {
       setCampaign((prev) => ({
         ...prev,
-        timeStart: date,
+        timeEnd: date,
       }));
     } else {
       toastMsgError(t('invalidDate'));
@@ -77,68 +63,49 @@ export default function InfoBase({
   };
   return (
     <InfoBaseStyle>
-      <Card className="card">
-        <div className="cardHeader">
-          <Typography variant="h5" className="headerText">
-            {t('infoCampaignBase')}
-          </Typography>
-        </div>
-        <div className="cardBody">
-          <Grid container className="campaign-container">
-            <Grid item xs={2} sm={2}>
-              <Typography variant="subtitle1" className="title">
-                {t('campaignName')}
-              </Typography>
+      <div className="card">
+        <Card className="card-container">
+          <TitleHeader title="Điền các thông tin cơ bản của chiến dịch" />
+          <CardContent className="card-content">
+            <Grid container className="campaign-container">
+              <Grid item xs={2} sm={2}>
+                <Typography variant="subtitle1" gutterBottom className="title">
+                  Tên chiến dịch
+                </Typography>
+              </Grid>
+              <Grid item xs={8} sm={8}>
+                <InputBase
+                  className="input-name-campaign"
+                  inputProps={{ 'aria-label': 'naked' }}
+                  name="name"
+                  value={campaign.name}
+                  onChange={onHandleCampaign}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={10} sm={10}>
-              <InputBase
-                className="input-name-campaign"
-                inputProps={{ 'aria-label': 'naked' }}
-                name="name"
-                value={campaign.name}
-                onChange={onHandleCampaign}
-                disabled={pageType === 'view'}
-              />
+            <Grid container className="campaign-container">
+              <Grid item sx={2} sm={2}>
+                <Typography variant="subtitle1" gutterBottom className="title">
+                  Nội dung chiến dịch
+                </Typography>
+              </Grid>
+              <Grid item sx={8} sm={8}>
+                <TextareaAutosize
+                  aria-label="minimum height"
+                  rowsMin={5}
+                  className="textarea"
+                  name="desc"
+                  value={campaign.desc}
+                  onChange={onHandleCampaign}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container className="campaign-container">
-            <Grid item sx={2} sm={2}>
-              <Typography variant="subtitle1" gutterBottom className="title">
-                {t('campaignDescription')}
-              </Typography>
-            </Grid>
-            <Grid item sx={10} sm={10}>
-              <div className="editor">
-                {pageType === 'view' && (
-                  <Editor
-                    toolbarHidden
-                    editorState={editorStateDesc}
-                    readOnly="true"
-                  />
-                )}
-                {pageType !== 'view' && (
-                  <Editor
-                    editorState={editorStateDesc}
-                    onEditorStateChange={onEditorStateChange}
-                    toolbar={{
-                      inline: { inDropdown: true },
-                      list: { inDropdown: true },
-                      textAlign: { inDropdown: true },
-                      link: { inDropdown: true },
-                      history: { inDropdown: true },
-                    }}
-                  />
-                )}
-              </div>
-            </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item sx={2} sm={2}>
-              <Typography variant="subtitle1" gutterBottom className="title">
-                {t('campaignImage')}
-              </Typography>
-            </Grid>
-            {pageType !== 'view' && (
+            <Grid container>
+              <Grid item sx={2} sm={2}>
+                <Typography variant="subtitle1" gutterBottom className="title">
+                  Hình ảnh chiến dịch
+                </Typography>
+              </Grid>
               <Grid item sx={5} sm={5}>
                 <Button variant="contained" component="label">
                   <Tooltip title={t('upload')}>
@@ -153,48 +120,42 @@ export default function InfoBase({
                   />
                 </Button>
               </Grid>
-            )}
-          </Grid>
-          <Grid container className="campaign-container">
-            <Grid item xs={2} sm={2} className="date-container">
-              <Typography variant="subtitle1" gutterBottom className="title">
-                {t('timeStart')}
-              </Typography>
             </Grid>
-            <Grid item xs={4} sm={4} className="date-container">
-              <DateTimePicker
-                inputVariant="outlined"
-                margin="normal"
-                format="yyyy-MM-dd HH:mm"
-                className="datetime"
-                cancelLabel={t('cancel')}
-                okLabel={t('ok')}
-                value={campaign.timeStart}
-                onChange={(date) => onChangeTimeStart(date)}
-                disabled={pageType === 'view'}
-              />
+            <Grid container className="campaign-container">
+              <Grid item xs={6} sm={6} className="date-container">
+                <Typography variant="subtitle1" gutterBottom className="title">
+                  Thời gian bắt đầu
+                </Typography>
+                <DateTimePicker
+                  inputVariant="outlined"
+                  margin="normal"
+                  format="yyyy-MM-dd HH:mm"
+                  className="datetime"
+                  cancelLabel={t('cancel')}
+                  okLabel={t('ok')}
+                  value={campaign.timeStart}
+                  onChange={(date) => onChangeTimeStart(date)}
+                />
+              </Grid>
+              <Grid item xs={6} sm={6} className="date-container">
+                <Typography variant="subtitle1" gutterBottom className="title">
+                  Thời gian kết thúc
+                </Typography>
+                <DateTimePicker
+                  inputVariant="outlined"
+                  margin="normal"
+                  format="yyyy-MM-dd HH:mm"
+                  className="datetime"
+                  cancelLabel={t('cancel')}
+                  okLabel={t('ok')}
+                  value={campaign.timeEnd}
+                  onChange={(date) => onChangeTimeEnd(date)}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={2} sm={2} className="date-container">
-              <Typography variant="subtitle1" gutterBottom className="title">
-                {t('timeEnd')}
-              </Typography>
-            </Grid>
-            <Grid item xs={4} sm={4} className="date-container">
-              <DateTimePicker
-                inputVariant="outlined"
-                margin="normal"
-                format="yyyy-MM-dd HH:mm"
-                className="datetime"
-                cancelLabel={t('cancel')}
-                okLabel={t('ok')}
-                value={campaign.timeEnd}
-                onChange={(date) => onChangeTimeEnd(date)}
-                disabled={pageType === 'view'}
-              />
-            </Grid>
-          </Grid>
-        </div>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </InfoBaseStyle>
   );
 }

@@ -1,6 +1,6 @@
 import { STATUS_RESPONSE } from '../../constants/index';
 
-import { toastMsgError } from '../../commons/Toastify';
+import { toastMsgError, toastSuccess } from '../../commons/Toastify';
 
 const { put, call, all, takeLatest } = require('redux-saga/effects');
 const apis = require('../../apis/campaign');
@@ -28,30 +28,26 @@ export function* searchCampaign({ payload }) {
     const {
       key,
       userId,
-      participantStatus,
+      typeCampaign,
       status,
-      messageType,
-      messageObject,
+      typeMessage,
+      objectMessage,
       timeStart,
       timeEnd,
       page,
       records,
-      scope,
-      collectType,
     } = payload;
     const resp = yield call(apis.apiSearchCampaign, {
       key,
-      participantStatus,
+      typeCampaign,
       status,
       userId,
-      messageType,
-      messageObject,
+      typeMessage,
+      objectMessage,
       page,
       records,
       timeStart,
       timeEnd,
-      scope,
-      collectType,
     });
     const { result } = resp;
     if (resp.status === STATUS_RESPONSE.STATUS_OKE) {
@@ -77,34 +73,46 @@ export function* getDataCampaign({ payload }) {
   }
 }
 
+export function* userJoinCampaign({ payload }) {
+  try {
+    const { campaignId, userId } = payload;
+    const resp = yield call(apis.apiUserJoinCampaign, { campaignId, userId });
+    const { status } = resp;
+    if (status === STATUS_RESPONSE.STATUS_OKE) {
+      toastSuccess('Đăng ký tham gia thành công');
+      yield put(actions.userJoinCampaignSuccess({ campaignId, userId }));
+    } else {
+      const { code, message } = resp;
+      toastMsgError(`Lỗi:  ${code} - ${message}`);
+    }
+  } catch (error) {
+    toastMsgError('Lỗi:  ');
+  }
+}
+
+export function* userLeaveCampaign({ payload }) {
+  try {
+    const { campaignId, userId } = payload;
+    const resp = yield call(apis.apiUserLeaveCampaign, { campaignId, userId });
+    const { status } = resp;
+    if (status === STATUS_RESPONSE.STATUS_OKE) {
+      toastSuccess('Rời chiến dịch thành công');
+      yield put(actions.userLeaveCampaignSuccess({ campaignId, userId }));
+    } else {
+      const { code, message } = resp;
+      toastMsgError(`Lỗi:  ${code} - ${message}`);
+    }
+  } catch (error) {
+    toastMsgError('Lỗi:  ');
+  }
+}
+
 export function* createCampaign({ payload }) {
-  const campaign = payload;
-  const resp = yield call(apis.apiCreateCampaign, { campaign });
-  const { status, message } = resp;
-  if (status === STATUS_RESPONSE.STATUS_OKE) {
-    yield put(actions.fetchHandleCampaignSuccess(true));
-  } else {
-    toastMsgError(`Lỗi:  ${status} - ${message}`);
-  }
-}
+  const resp = yield call(apis.apiCreateCampaign, { payload });
+  const { status, message } = resp.data;
 
-export function* editCampaign({ payload }) {
-  const { campaignId, data } = payload;
-  const resp = yield call(apis.apiEditCampaign, { campaignId, data });
-  const { status, message } = resp;
-  if (status === STATUS_RESPONSE.STATUS_OKE) {
-    yield put(actions.fetchHandleCampaignSuccess(true));
-  } else {
-    toastMsgError(`Lỗi:  ${status} - ${message}`);
-  }
-}
-
-export function* deleteCampaign({ payload }) {
-  const { campaignId } = payload;
-  const resp = yield call(apis.apiDeleteCampaign, { campaignId });
-  const { status, message } = resp;
-  if (status === STATUS_RESPONSE.STATUS_OKE) {
-    yield put(actions.fetchHandleCampaignSuccess(true));
+  if (STATUS_RESPONSE.OK === status) {
+    yield put(actions.fetchCreateCampaignSuccess(true));
   } else {
     toastMsgError(`Lỗi:  ${status} - ${message}`);
   }
@@ -114,9 +122,9 @@ export default function* rootSaga() {
   yield all([
     takeLatest(actions.actionTypes.FETCH_CAMPAIGN, fetchCampaign),
     takeLatest(actions.actionTypes.GET_DATA_CAMPAIGN, getDataCampaign),
+    takeLatest(actions.actionTypes.USER_JOIN_CAMPAIGN, userJoinCampaign),
+    takeLatest(actions.actionTypes.USER_LEAVE_CAMPAIGN, userLeaveCampaign),
     takeLatest(actions.actionTypes.FILTER_SEARCH, searchCampaign),
     takeLatest(actions.actionTypes.CREATE_CAMPAIGN, createCampaign),
-    takeLatest(actions.actionTypes.EDIT_CAMPAIGN, editCampaign),
-    takeLatest(actions.actionTypes.DELETE_CAMPAIGN, deleteCampaign),
   ]);
 }

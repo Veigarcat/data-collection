@@ -1,62 +1,73 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
+
+import {
+  Typography,
+  Grid,
+  FormControl,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
+// import { useTranslation } from 'react-i18next';
 import CreateCampaignStyle from './campaignCreateStep2.style';
 import CalculatorScore from '../CalculatorScore';
 import CreateUsecase from '../CreateUsecase';
 import CreateIntent from '../CreateIntent';
-import AppId from '../AppId';
 
 export default function CreateCampaign({
   campaign,
   setCampaign,
+  onHandleCampaign,
   intentList,
   usecaseList,
   setIntentList,
   setUsecaseList,
-  onHandleCampaign,
-  pageType,
-  intentListApi,
-  setIntentListApi,
 }) {
+  // const { t } = useTranslation();
   return (
     <CreateCampaignStyle>
       <div className="create-campaign-container">
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-            <AppId
-              campaign={campaign}
-              onHandleCampaign={onHandleCampaign}
-              pageType={pageType}
-            />
+        {/* <Typography gutterBottom variant="h4" className="title-page">
+          {t('createCampaign')}
+        </Typography> */}
+        <CalculatorScore campaign={campaign} setCampaign={setCampaign} />
+        <div className="type-campaign">
+          <Grid container className="select-container">
+            <Grid item sm={4} sx={4} className="select-item">
+              <Typography variant="subtitle1">Chọn kịch bản</Typography>
+            </Grid>
+            <Grid item sm={8} sx={8} className="select-item">
+              <FormControl className="form-control-select">
+                <Select
+                  // defaultValue={1}
+                  value={campaign.typeCampaign}
+                  name="typeCampaign"
+                  onChange={onHandleCampaign}
+                >
+                  <MenuItem value={1} className="select-component-item">
+                    Tạo chiến dịch theo kịch bản
+                  </MenuItem>
+                  <MenuItem value={2} className="select-component-item">
+                    Tạo chiến dịch theo ý định
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-            <CalculatorScore
-              campaign={campaign}
-              setCampaign={setCampaign}
-              pageType={pageType}
-            />
-          </Grid>
-        </Grid>
-        {campaign.collectType === 'usecase' && (
+        </div>
+        {campaign.typeCampaign === 1 && (
           <CreateUsecase
             campaign={campaign}
             setCampaign={setCampaign}
             usecaseList={usecaseList}
             setUsecaseList={setUsecaseList}
-            pageType={pageType}
-            intentListApi={intentListApi}
-            setIntentListApi={setIntentListApi}
           />
         )}
-        {campaign.collectType === 'intent' && (
+        {campaign.typeCampaign === 2 && (
           <CreateIntent
             campaign={campaign}
             setCampaign={setCampaign}
             intentList={intentList}
             setIntentList={setIntentList}
-            pageType={pageType}
-            intentListApi={intentListApi}
-            setIntentListApi={setIntentListApi}
           />
         )}
       </div>

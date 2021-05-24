@@ -18,59 +18,25 @@ export const LIST_CRITERIA = [
 ];
 
 export const LIST_INTENT = [
-  { id: '607863316014fc00397402a0', display_name: 'Đặt xe', name: 'dat_xe' },
-  { id: '607863316014fc08607403a8', display_name: 'Đúng', name: 'dung' },
-  { id: '607863316014fcdd777403d9', display_name: 'Sai', name: 'sai' },
   {
-    id: '607863316014fcaf86740415',
-    display_name: 'Next Loop Intent',
-    name: 'next_loop_intent',
-  },
-  { id: '607863316014fc8a6274040b', display_name: 'Im lặng', name: 'im_lang' },
-  {
-    id: '601b78667c421476d6734fd8',
-    display_name: 'Hỏi đưa đón tại nhà',
-    name: 'hoi_dua_don_tai_nha',
+    name: 'Vay vốn',
+    id: '3998ab91-51da-4b32-b8a6-b9ae7175feb4',
+    status: 1,
   },
   {
-    id: '607863316014fcf1797404d1',
-    display_name: 'Hỏi có phải nhà xe không',
-    name: 'hoi_co_phai_nha_xe_khong',
+    name: 'Mục đích vay vốn',
+    id: '88e0cec0-4e67-405e-bc46-466e2a6875f6',
+    status: 1,
   },
   {
-    id: '607863316014fc1d26740395',
-    display_name: 'Gặp tổng đài viên',
-    name: 'gap_tong_dai_vien',
+    name: 'Thủ tục vay vốn',
+    id: 'dd9c21d5-5bf6-4a18-9cf9-357cfdb28d2b',
+    status: 2,
   },
   {
-    id: '607863316014fc5feb740418',
-    display_name: 'Cung cấp điểm đón tại nhà',
-    name: 'Cung_cap_diem_don_tai_nha',
-  },
-  {
-    id: '607863316014fc0cad740476',
-    display_name: 'Cung cấp thời gian',
-    name: 'cung_cap_thoi_gian',
-  },
-  {
-    id: '607863316014fcaff2740460',
-    display_name: 'Cung cấp số điện thoại',
-    name: 'cung_cap_so_dien_thoai',
-  },
-  {
-    id: '607863316014fcf29a74043f',
-    display_name: 'Cung cấp số lượng người',
-    name: 'cung_cap_so_luong_nguoi',
-  },
-  {
-    id: '607863316014fcf18e7404b3',
-    display_name: 'Cung cấp ngày',
-    name: 'cung_cap_ngay',
-  },
-  {
-    id: '607863316014fc05f1740408',
-    display_name: 'Bắt đầu',
-    name: 'bat_dau',
+    name: 'Thời hạn vay vốn',
+    id: '289b4c10-9b74-4b2c-8374-bc43ec68de40',
+    status: 2,
   },
 ];
 
@@ -84,32 +50,3 @@ export const LIST_ROLE_USER_SPECIFIED = [
     name: 'Người reviewer',
   },
 ];
-export const STATUS_RESULT = {
-  ASSIGNMENT: 'ASSIGNMENT',
-  PROCESSING: 'PROCESSING',
-  FINISH: 'FINISH',
-};
-export const STATUS_USER_CAMPAIGN = {
-  NOMINATION: 'NOMINATION',
-  JOIN: 'JOIN',
-};
-export const CAMPAIGN_TYPE = {
-  USECASE: 'USECASE',
-  INTENT: 'INTENT',
-};
-export const STATUS_CALL_API = {
-  STATUS_OKE: 1,
-  STATUS_NOT_FINISH: 7001,
-  USECASE_FINISH: 7002,
-};
-
-export const PAGE_CAMPAIGN_TYPE = {
-  TOTAL: 'total',
-  MY_CAMPAIGN: 'myCampaign',
-  OTHER_CAMPAIGN: 'otherCampaign',
-};
-export const USER_STATUS = {
-  TOTAL: 'total',
-  ACTIVE: 'active',
-  DEACTIVATE: 'deactivate',
-};

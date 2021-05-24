@@ -1,30 +1,36 @@
 import styled from 'styled-components';
 import { COLOR } from '../../../styles/color';
-import { FEATURE_COLORS } from '../../../themes/configs';
 
 export default styled.div`
   .container {
-    flex-direction: column;
-    padding: 10px;
-    margin-top: 20px;
-    background-color: ${FEATURE_COLORS.bgIconHeader};
+    padding: 20px;
+    margin-top: 60px;
+    display: flex;
   }
-  .table {
-    margin-top: 20px;
+  .title_filter {
+    color: ${COLOR.black};
+    margin-bottom: 20px;
+  }
+  .table-container {
+    margin: 0 20px;
+    padding: 20px;
+    border: 1px solid black;
+    background-color: #FFFFE;
+  }
+  .title-table-result-user {
+    padding-bottom: 20px;
+    text-align: center;
   }
   .table-header {
     background-color: ${COLOR.green[200]};
   }
   .table-row {
-    background-color: ${COLOR.pink[[100]]};
+    background-color: ${COLOR.white};
   }
   .table-row-sole {
     background-color: ${COLOR.gray[200]};
   }
   .table-pagination {
     background-color: ${COLOR.pink[100]};
-  }
-  .icon {
-    cursor: pointer;
   }
 `;

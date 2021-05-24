@@ -1,130 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-import { Typography, Card, Tooltip, Icon, Divider } from '@material-ui/core';
+import { Typography, Card } from '@material-ui/core';
 
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import ResultUserStyle from './resultUser.style';
-import ChartProgress from './ChartProgress';
+import ChartProgress from './ChatProgress';
 import StatisticalTable from './StatisticalTable';
-import {
-  apiStatisticCountUserByCampaignId,
-  getDetailResultUserByCampaignId,
-} from '../../apis/result';
-import { CAMPAIGN_TYPE } from '../../constants/params';
 
 export default function ResultUser() {
   const { t } = useTranslation();
-  const { campaignId } = useParams();
-  const { userInfo } = useSelector((state) => state.auth);
-  const [infoCampaign, setInfoCampaign] = useState({
-    name: '',
-    collectType: '',
-  });
-  const [arrBox, setArrBox] = useState([]);
-  const [statisticDetail, setStatisticDetail] = useState([]);
-
-  useEffect(() => {
-    apiStatisticCountUserByCampaignId({ campaignId, userId: userInfo.userId })
-      .then((res) => {
-        if (res.result) {
-          const {
-            collectType,
-            total,
-            totalChat,
-            // totalSession,
-            totalChatSentence,
-            totalCorrectAnswer,
-            totalCorrectAnswerConfirm,
-            totalBotCorrect,
-            totalBotIncorrect,
-            totalValidConversation,
-            campaign,
-          } = res.result;
-          setInfoCampaign(campaign);
-          setArrBox([
-            {
-              title:
-                collectType.toUpperCase() === CAMPAIGN_TYPE.USECASE
-                  ? 'totalUsecase'
-                  : 'totalIntent',
-              tooltip:
-                collectType.toUpperCase() === CAMPAIGN_TYPE.USECASE
-                  ? 'totalUsecaseInfo'
-                  : 'totalIntentInfo',
-              number: total,
-            },
-            {
-              title:
-                collectType.toUpperCase() === CAMPAIGN_TYPE.USECASE
-                  ? 'totalUsecaseChat'
-                  : 'totalIntentChat',
-              tooltip:
-                collectType.toUpperCase() === CAMPAIGN_TYPE.USECASE
-                  ? 'totalUsecaseChatInfo'
-                  : 'totalIntentChatInfo',
-              number: totalChat,
-            },
-            // {
-            //   title: 'totalSession',
-            //   tooltip: 'totalSessionInfo',
-            //   number: totalSession,
-            // },
-            {
-              title: 'totalChatSentence',
-              tooltip: 'totalChatSentenceInfo',
-              number: totalChatSentence,
-            },
-            {
-              title: 'totalCorrectAnswer',
-              tooltip: 'totalCorrectAnswerInfo',
-              number: totalCorrectAnswer,
-            },
-            {
-              title: 'totalCorrectAnswerConfirm',
-              tooltip: 'totalCorrectAnswerConfirmInfo',
-              number: totalCorrectAnswerConfirm,
-            },
-            {
-              title: 'totalBotCorrect',
-              tooltip: 'totalBotCorrectInfo',
-              number: totalBotCorrect,
-            },
-            {
-              title: 'totalBotIncorrect',
-              tooltip: 'totalBotIncorrectInfo',
-              number: totalBotIncorrect,
-            },
-            {
-              title: 'totalValidConversation',
-              tooltip: 'totalValidConversationInfo',
-              number: totalValidConversation,
-            },
-          ]);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-    getDetailResultUserByCampaignId({ userId: userInfo.userId, campaignId })
-      .then((res) => {
-        console.log('res', res.result);
-        setStatisticDetail(res.result);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
+  const arrBox = [
+    {
+      title: 'Tổng số kịch bản chat',
+      number: 5,
+    },
+    {
+      title: 'Tổng số kịch bản đã chat',
+      number: 6,
+    },
+    {
+      title: 'Tổng số phiên chat',
+      number: 20,
+    },
+    {
+      title: 'Tổng số câu chat',
+      number: 80,
+    },
+    {
+      title: 'Tổng số câu hợp lệ bot đoán đúng',
+      number: 80,
+    },
+    {
+      title: 'Tổng số câu hợp lệ bot đoán sai',
+      number: 80,
+    },
+  ];
   return (
     <ResultUserStyle>
       <div className="result-user-container">
         <Typography
           gutterBottom
-          variant="h4"
-          component="h4"
+          variant="h3"
+          component="h3"
           className="title-result-user"
         >
-          {t('progressCampaign')}: {infoCampaign.name}
+          {t('progressCampaign')}
         </Typography>
         <div className="general-information">
           <Typography
@@ -136,37 +56,38 @@ export default function ResultUser() {
             {t('generalInformation')}
           </Typography>
           <div className="container-box">
-            {arrBox &&
-              arrBox.map((item, index) => (
-                <Card className={`card addonBefore_${index + 1}`}>
-                  <div className="wrapperCard">
-                    <div className="countBox">
-                      <div className="title">
-                        <Typography variant="h5">{t(item.title)}</Typography>
-                        <Tooltip title={t(item.tooltip)}>
-                          <Icon className="infoIcon" fontSize="small">
-                            info
-                          </Icon>
-                        </Tooltip>
-                      </div>
-                    </div>
-                    <Divider className="divider" />
-                    <div className="countBox">
-                      <Typography variant="h5"> {item.number}</Typography>
-                    </div>
-                  </div>
-                </Card>
-              ))}
+            {arrBox.map((item) => (
+              <Card className="grid-item" key={item.title}>
+                <div className="account-box title-account-box">
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="h5"
+                    className="sum-usecase"
+                  >
+                    {item.title}
+                  </Typography>
+                </div>
+                <hr className="divider" />
+                <div className="account-box number-account-box">
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="h5"
+                    className="number-sum-usecase"
+                  >
+                    {item.number}
+                  </Typography>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
         <div className="chart-progress">
           <ChartProgress />
         </div>
         <div className="statistical-table">
-          <StatisticalTable
-            statisticDetail={statisticDetail}
-            collectType={infoCampaign.collectType}
-          />
+          <StatisticalTable />
         </div>
       </div>
     </ResultUserStyle>

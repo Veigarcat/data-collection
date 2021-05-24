@@ -1,42 +1,34 @@
 import { actionTypes } from './actions';
-import { randomAvatarColor } from '../../configs/styleConstant';
+
+const { getCookie } = require('../../utils/cookie');
 
 export const initialState = {
-  accessToken: null,
-  userId: null,
-  ssoUserId: null,
-  verifying: false,
-  userInfo: null,
+  accessToken: getCookie('accessToken'),
+  userId: '60544d3960e6a65e7cfe82f9',
+  isLoggingIn: false,
+  isSigningUp: false,
 };
 
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
-    case actionTypes.VERIFY_TOKEN:
-      return { ...state, verifying: true };
-    case actionTypes.LOGOUT:
-      return {
-        ...state,
-        accessToken: null,
-      };
-    case actionTypes.VERIFY_TOKEN_SUCCESS: {
-      const { accessToken, result } = action.payload;
-      return {
-        ...state,
-        verifying: false,
-        accessToken,
-        ssoUserId: result.sso_user_id,
-        userId: result.id,
-        userInfo: {
-          userId: result.id,
-          name: result.name,
-          email: result.email,
-          avatar: result.avatarUrl,
-          bgColor: randomAvatarColor(),
-        },
-      };
+    case actionTypes.LOGIN:
+      return { ...state, isLoggingIn: true };
+
+    case actionTypes.LOGIN_SUCCESS: {
+      const { accessToken, userId } = action.data;
+      return { ...state, isLoggingIn: false, accessToken, userId };
     }
-    case actionTypes.VERIFY_TOKEN_FAILURE:
-      return { ...state, verifying: false };
+
+    case actionTypes.LOGIN_FAILURE: {
+      return { ...state, isLoggingIn: false };
+    }
+    case actionTypes.SIGNUP:
+      return { ...state, isSigningUp: true };
+
+    case actionTypes.SIGNUP_FINISH: {
+      return { ...state, isLoadingSignIn: false };
+    }
+
     default:
       return state;
   }

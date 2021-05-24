@@ -18,6 +18,24 @@ export async function apiSearchCampaign(dataSearch) {
   return result;
 }
 
+export async function apiUserJoinCampaign({ userId, campaignId }) {
+  const result = await api({
+    method: 'POST',
+    url: '/campaign/user-join',
+    data: { userId, campaignId },
+  });
+  return result;
+}
+
+export async function apiUserLeaveCampaign({ userId, campaignId }) {
+  const result = await api({
+    method: 'POST',
+    url: '/campaign/user-leave',
+    data: { userId, campaignId },
+  });
+  return result;
+}
+
 export async function apiGetDataCampaign(campaignId) {
   const campaign = await api({
     method: 'GET',
@@ -27,37 +45,11 @@ export async function apiGetDataCampaign(campaignId) {
   return campaign;
 }
 
-export async function apiCreateCampaign({ campaign }) {
+export async function apiCreateCampaign(campaign) {
   const result = await api({
     method: 'POST',
     url: '/campaign/create',
-    data: campaign,
-  });
-  return result;
-}
-
-export async function apiEditCampaign({ campaignId, data }) {
-  const result = await api({
-    method: 'POST',
-    url: '/campaign/update',
-    data: { campaignId, data },
-  });
-  return result;
-}
-
-export async function apiDeleteCampaign({ campaignId }) {
-  const result = await api({
-    method: 'DELETE',
-    url: `/campaign/delete/${campaignId}`,
-  });
-  return result;
-}
-
-export async function apiChangeStatusCampaign({ campaignId, status }) {
-  const result = await api({
-    method: 'POST',
-    url: `/campaign/change-status-campaign`,
-    data: { campaignId, status },
+    data: { campaign },
   });
   return result;
 }

@@ -1,212 +1,138 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import {
   Typography,
+  FormControl,
+  FormLabel,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  TableContainer,
   Table,
   TableHead,
   TableRow,
   TableCell,
   TableBody,
+  TablePagination,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import StatisticalTableStyle from './statisticalTable.style';
 
-export default function StatisticalTable({ statisticDetail, collectType }) {
-  const { t } = useTranslation();
-  const [menuState, setMenuState] = useState([]);
-  const titleTable = [
-    {
-      title: 'STT',
-      tooltip: 'STT',
-    },
-    {
-      title: collectType,
-      tooltip: collectType,
-    },
-    {
-      title: 'totalChatSentence',
-      tooltip: 'totalChatSentenceInfo',
-    },
-    {
-      title: 'totalBotCorrect',
-      tooltip: 'totalBotCorrectInfo',
-    },
-    {
-      title: 'totalBotIncorrect',
-      tooltip: 'totalBotIncorrectInfo',
-    },
-    {
-      title: 'totalValidConversation',
-      tooltip: 'totalValidConversationInfo',
-    },
-    {
-      title: 'totalCorrectAnswer',
-      tooltip: 'totalCorrectAnswerInfo',
-    },
-    {
-      title: 'totalCorrectAnswerConfirm',
-      tooltip: 'totalCorrectAnswerConfirmInfo',
-    },
-  ];
-  useEffect(() => {
-    if (collectType === 'usecase' && statisticDetail.length) {
-      const newArr = [];
-      for (let i = 0; i < statisticDetail.length; i += 1) {
-        newArr.push(false);
-      }
-      setMenuState(newArr);
-    }
-  }, [statisticDetail]);
+function createData(name, calories, fat, carbs, protein, aaaa, bbbb, cccc) {
+  return { name, calories, fat, carbs, protein, aaaa, bbbb, cccc };
+}
+const rows = [
+  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 20, 20, 30),
+  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 40, 30, 8),
+  createData('Eclair', 262, 16.0, 24, 6.0, 2, 6, 90),
+];
+const titleTable = [
+  'Kịch bản',
+  'Tổng số phiên chat',
+  'Tổng số câu chat',
+  'Tổng số câu chat hợp lệ bot đoán đúng',
+  'Tổng số câu chat hợp lệ bot đoán sai',
+  'Số hội thoại hợp lệ',
+  'Số lượt trả lời hợp lệ',
+  'Số lượt bot trả lời được bạn xác nhận',
+];
+export default function StatisticalTable() {
+  // const { t } = useTranslation();
+  const [page, setPage] = React.useState(2);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleClickExpand = (index) => {
-    const newArr = [...menuState];
-    newArr[index] = !menuState[index];
-    setMenuState(newArr);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
     <StatisticalTableStyle>
       <div className="container">
-        <Typography gutterBottom variant="h5" component="h5" align="center">
-          Bảng thống kê kết quả
-        </Typography>
-        <Table aria-label="customized table" className="table">
-          <TableHead>
-            <TableRow className="table-header">
-              {titleTable.map((item) => (
-                <TableCell
-                  key={item}
-                  align="left"
-                  variant="head"
-                  className="headerCell"
-                >
-                  <div className="cellContent">{t(item.title)}</div>
-                </TableCell>
-              ))}
-              {collectType === 'usecase' && (
-                <TableCell className="headerCell" />
-              )}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {collectType === 'intent' &&
-              statisticDetail &&
-              statisticDetail.map((intent, index) => (
-                <TableRow
-                  key={intent.id}
-                  className={index % 2 === 0 ? 'table-row ' : 'table-row-sole '}
-                >
-                  <TableCell align="center" className="cellBody">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell component="th" scope="row" className="cellBody">
-                    {intent.displayName}
-                  </TableCell>
-                  <TableCell align="center" className="cellBody">
-                    {intent.sumMsg || 0}
-                  </TableCell>
-                  <TableCell align="center" className="cellBody">
-                    {intent.sumBotCorrect || 0}
-                  </TableCell>
-                  <TableCell align="center" className="cellBody">
-                    {intent.sumBotInCorrect || 0}
-                  </TableCell>
-                  <TableCell align="center" className="cellBody">
-                    {intent.sumValidConversation || 0}
-                  </TableCell>
-                  <TableCell align="center" className="cellBody">
-                    {intent.sumCorrectAnswer || 0}
-                  </TableCell>
-                  <TableCell align="center" className="cellBody">
-                    {intent.sumMsgConfirm || 0}
+        <FormControl component="fieldset">
+          <FormLabel component="legend" className="title_filter">
+            Lọc các câu theo trạng thái
+          </FormLabel>
+          <FormGroup>
+            <FormControlLabel
+              control={<Checkbox name="total" />}
+              label="Tất cả"
+            />
+            <FormControlLabel
+              control={<Checkbox name="bot_guessed_correctly" />}
+              label="Số câu chat hợp lệ bot đoán đúng"
+            />
+            <FormControlLabel
+              control={<Checkbox name="bot_guessed_wrong" />}
+              label="Số câu chat hợp lệ bot đoán sai"
+            />
+            <FormControlLabel
+              control={<Checkbox name="number_confirmed" />}
+              label="Số câu bot trả lời được bạn xác nhận"
+            />
+          </FormGroup>
+        </FormControl>
+        <div className="table-container">
+          <Typography
+            gutterBottom
+            variant="h3"
+            component="h3"
+            className="title-table-result-user"
+          >
+            Bảng thống kê kết quả
+          </Typography>
+          <TableContainer>
+            <Table aria-label="customized table">
+              <TableHead className="table-header">
+                <TableRow>
+                  {titleTable.map((item) => (
+                    <TableCell key={item}>{item}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row, index) => (
+                  <TableRow
+                    key={row.name}
+                    className={index % 2 === 0 ? 'table-row' : 'table-row-sole'}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row.name}
+                    </TableCell>
+                    <TableCell align="right">{row.calories}</TableCell>
+                    <TableCell align="right">{row.fat}</TableCell>
+                    <TableCell align="right">{row.carbs}</TableCell>
+                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{row.aaaa}</TableCell>
+                    <TableCell align="right">{row.bbbb}</TableCell>
+                    <TableCell align="right">{row.cccc}</TableCell>
+                  </TableRow>
+                ))}
+                <TableRow className="table-pagination">
+                  <TableCell colSpan={8}>
+                    <TablePagination
+                      component="div"
+                      count={100}
+                      page={page}
+                      onChangePage={handleChangePage}
+                      rowsPerPage={rowsPerPage}
+                      labelDisplayedRows={({ from, to, count }) =>
+                        `${from}-${to} của  ${count}`
+                      }
+                      labelRowsPerPage="Số dữ liệu mỗi trang"
+                      onChangeRowsPerPage={handleChangeRowsPerPage}
+                    />
                   </TableCell>
                 </TableRow>
-              ))}
-            {collectType === 'usecase' &&
-              statisticDetail &&
-              statisticDetail.map((usecase, index) => (
-                <>
-                  <TableRow key={usecase.id}>
-                    <TableCell align="center" className="cellBody">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell component="th" scope="row" className="cellBody">
-                      {usecase.usecaseName}
-                    </TableCell>
-                    <TableCell align="center" className="cellBody">
-                      {usecase.sumMsg || 0}
-                    </TableCell>
-                    <TableCell align="center" className="cellBody">
-                      {usecase.sumBotCorrect || 0}
-                    </TableCell>
-                    <TableCell align="center" className="cellBody">
-                      {usecase.sumBotInCorrect || 0}
-                    </TableCell>
-                    <TableCell align="center" className="cellBody">
-                      {usecase.sumValidConversation || 0}
-                    </TableCell>
-                    <TableCell align="center" className="cellBody">
-                      {usecase.sumCorrectAnswer || 0}
-                    </TableCell>
-                    <TableCell align="center" className="cellBody">
-                      {usecase.sumMsgConfirm || 0}
-                    </TableCell>
-                    <TableCell>
-                      <ExpandMoreIcon
-                        color="secondary"
-                        className="icon"
-                        onClick={() => handleClickExpand(index)}
-                      />
-                    </TableCell>
-                  </TableRow>
-                  {menuState[index] &&
-                    usecase.intents &&
-                    usecase.intents.map((intent, intentIndex) => (
-                      <TableRow
-                        key={intent.id}
-                        className={
-                          intentIndex % 2 === 0
-                            ? 'table-row'
-                            : 'table-row-sole '
-                        }
-                      >
-                        <TableCell align="center" className="cellBody">
-                          {index + 1}.{intentIndex + 1}
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          className="cellBody"
-                        >
-                          {intent.displayName}
-                        </TableCell>
-                        <TableCell align="center" className="cellBody">
-                          {intent.sumMsg || 0}
-                        </TableCell>
-                        <TableCell align="center" className="cellBody">
-                          {intent.sumBotCorrect || 0}
-                        </TableCell>
-                        <TableCell align="center" className="cellBody">
-                          {intent.sumBotInCorrect || 0}
-                        </TableCell>
-                        <TableCell align="center" className="cellBody">
-                          {intent.sumValidConversation || 0}
-                        </TableCell>
-                        <TableCell align="center" className="cellBody">
-                          {intent.sumCorrectAnswer || 0}
-                        </TableCell>
-                        <TableCell align="center" className="cellBody">
-                          {intent.sumMsgConfirm || 0}
-                        </TableCell>
-                        <TableCell className="cellBody" />
-                      </TableRow>
-                    ))}
-                </>
-              ))}
-          </TableBody>
-        </Table>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
       </div>
     </StatisticalTableStyle>
   );

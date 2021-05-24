@@ -1,9 +1,6 @@
 export const COLOR = {
   black: '#000000',
-  white: {
-    100: '#FFFFFF',
-    200: '#FFFFFE',
-  },
+  white: '#FFFFFF',
   gray: {
     100: '#F7FAFC',
     200: '#EDF2F7',
@@ -15,7 +12,6 @@ export const COLOR = {
     800: '#2D3748',
     900: '#1A202C',
     1000: '#FBFBFB',
-    1001: '#C1C1C1',
   },
   red: {
     100: '#FFF5F5',

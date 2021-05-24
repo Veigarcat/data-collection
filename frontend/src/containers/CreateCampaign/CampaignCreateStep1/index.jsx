@@ -10,9 +10,6 @@ export default function CreateCampaignStep1({
   campaign,
   setCampaign,
   onHandleCampaign,
-  pageType,
-  editorStateDesc,
-  setEditorStateDesc,
 }) {
   return (
     <CreateCampaignStyle>
@@ -21,24 +18,16 @@ export default function CreateCampaignStep1({
           campaign={campaign}
           setCampaign={setCampaign}
           onHandleCampaign={onHandleCampaign}
-          pageType={pageType}
-          editorStateDesc={editorStateDesc}
-          setEditorStateDesc={setEditorStateDesc}
         />
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-            <ParticipantInfo
-              campaign={campaign}
-              setCampaign={setCampaign}
-              pageType={pageType}
-            />
+        <Grid container>
+          <Grid item sm={6} sx={12}>
+            <ParticipantInfo campaign={campaign} setCampaign={setCampaign} />
           </Grid>
-          <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+          <Grid item sm={6} sx={12}>
             <CampaignType
               campaign={campaign}
               setCampaign={setCampaign}
               onHandleCampaign={onHandleCampaign}
-              pageType={pageType}
             />
           </Grid>
         </Grid>

@@ -10,7 +10,4 @@ export default styled.div`
   .drawer-container {
     overflow: auto;
   }
-  .a:hover {
-    text-decoration: none;
-  }
 `;

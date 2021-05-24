@@ -1,33 +1,43 @@
 export const actionTypes = {
-  LOGOUT: 'LOGOUT',
-
-  VERIFY_TOKEN: 'VERIFY_TOKEN',
-  VERIFY_TOKEN_SUCCESS: 'VERIFY_TOKEN_SUCCESS',
-  VERIFY_TOKEN_FAILURE: 'VERIFY_TOKEN_FAILURE',
+  LOGIN: 'LOGIN',
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  LOGIN_FAILURE: 'LOGIN_FAILURE',
+  SIGNUP: 'SIGNUP',
+  SIGNUP_FINISH: 'SIGNUP_FINISH',
 };
 
-export function logout() {
+// Đăng nhập
+export function login(email, password) {
   return {
-    type: actionTypes.LOGOUT,
+    type: actionTypes.LOGIN,
+    email,
+    password,
   };
 }
 
-export function verifyToken(accessToken) {
+export function loginSuccess(data) {
   return {
-    type: actionTypes.VERIFY_TOKEN,
-    accessToken,
+    type: actionTypes.LOGIN_SUCCESS,
+    data,
   };
 }
 
-export function verifyTokenSuccess(payload) {
+export function loginFailure() {
   return {
-    type: actionTypes.VERIFY_TOKEN_SUCCESS,
+    type: actionTypes.LOGIN_FAILURE,
+  };
+}
+
+// Đăng ký
+export function signUp(payload) {
+  return {
+    type: actionTypes.SIGNUP,
     payload,
   };
 }
 
-export function verifyTokenFailure() {
+export function signUpFinish() {
   return {
-    type: actionTypes.VERIFY_TOKEN_FAILURE,
+    type: actionTypes.SIGNUP_FINISH,
   };
 }

@@ -1,22 +1,26 @@
 import React from 'react';
+import SearchIcon from '@material-ui/icons/Search';
 import {
   Card,
-  TextField,
+  InputBase,
   Radio,
   RadioGroup,
   FormControlLabel,
   FormControl,
   FormLabel,
 } from '@material-ui/core';
+import Moment from 'moment';
+import { DateTimePicker } from '@material-ui/pickers';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { toastMsgError } from '../../../commons/Toastify';
 import SearchCampaignStyle from './searchCampaign.style';
 import { filterCampaign } from '../../../redux/campaign/actions';
 
 export default function SearchCampaign({ search, setSearch, setPage }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { userId } = useSelector((state) => state.auth);
+  // const { userId } = useSelector((state) => state.auth);
   const { limitPage } = useSelector((state) => state.campaign);
   const onChangeSearch = (e) => {
     setSearch((prev) => ({
@@ -30,7 +34,7 @@ export default function SearchCampaign({ search, setSearch, setPage }) {
         [e.target.name]: e.target.value,
         page: 1,
         records: limitPage,
-        userId,
+        userId: '603dff7f2f72d931f0606a17',
       }),
     );
   };
@@ -47,7 +51,7 @@ export default function SearchCampaign({ search, setSearch, setPage }) {
       dispatch(
         filterCampaign({
           ...search,
-          userId,
+          userId: '603dff7f2f72d931f0606a17',
           page: 1,
           records: limitPage,
         }),
@@ -55,32 +59,81 @@ export default function SearchCampaign({ search, setSearch, setPage }) {
       setPage(1);
     }
   };
+  const handleSearch = () => {
+    setPage(1);
+    dispatch(
+      filterCampaign({
+        ...search,
+        userId: '603dff7f2f72d931f0606a17',
+        page: 1,
+        records: limitPage,
+      }),
+    );
+  };
+  const onChangeTimeEnd = (date) => {
+    if (Moment(date).isAfter(search.timeStart)) {
+      setSearch((prev) => ({
+        ...prev,
+        timeEnd: date,
+      }));
+      dispatch(
+        filterCampaign({
+          ...search,
+          timeEnd: date,
+          page: 1,
+          records: limitPage,
+          userId: '603dff7f2f72d931f0606a17',
+        }),
+      );
+    } else {
+      toastMsgError(t('invalidDate'));
+    }
+  };
+  const onChangeTimeStart = (date) => {
+    if (Moment(date).isBefore(search.timeEnd)) {
+      setSearch((prev) => ({
+        ...prev,
+        timeStart: date,
+      }));
+      dispatch(
+        filterCampaign({
+          ...search,
+          timeStart: date,
+          page: 1,
+          records: limitPage,
+          userId: '603dff7f2f72d931f0606a17',
+        }),
+      );
+    } else {
+      toastMsgError(t('invalidDate'));
+    }
+  };
   return (
     <SearchCampaignStyle>
       <div className="search-campaign-container">
         <div className="search">
-          <TextField
-            label={t('search')}
-            id="outlined-start-adornment"
-            variant="outlined"
+          <div className="search-icon">
+            <SearchIcon color="primary" onClick={handleSearch} />
+          </div>
+          <InputBase
             className="input-search"
+            placeholder={t('search')}
+            inputProps={{ 'aria-label': 'search' }}
             name="key"
             value={search.key}
             onChange={onChangeKeySearch}
             onKeyDown={handleKeyPress}
           />
         </div>
-        <hr />
         <Card className="filter search-category">
           <FormControl component="fieldset">
             <FormLabel className="title-filter cat-campaign">
               {t('catCampaign')}
             </FormLabel>
             <RadioGroup
-              className="radio-group"
-              aria-label="participantStatus"
-              name="participantStatus"
-              value={search.participantStatus}
+              aria-label="typeCampaign"
+              name="typeCampaign"
+              value={search.typeCampaign}
               onChange={onChangeSearch}
             >
               <FormControlLabel
@@ -101,14 +154,12 @@ export default function SearchCampaign({ search, setSearch, setPage }) {
             </RadioGroup>
           </FormControl>
         </Card>
-        <hr />
         <Card className="filter search-status">
           <FormControl component="fieldset">
             <FormLabel className="title-filter status-campaign">
               {t('statusCampaign')}
             </FormLabel>
             <RadioGroup
-              className="radio-group"
               aria-label="gender"
               name="status"
               value={search.status}
@@ -120,14 +171,9 @@ export default function SearchCampaign({ search, setSearch, setPage }) {
                 label={t('total')}
               />
               <FormControlLabel
-                value="waiting"
+                value="happening"
                 control={<Radio />}
-                label={t('waiting')}
-              />
-              <FormControlLabel
-                value="running"
-                control={<Radio />}
-                label={t('running')}
+                label={t('happening')}
               />
               <FormControlLabel
                 value="finished"
@@ -137,17 +183,15 @@ export default function SearchCampaign({ search, setSearch, setPage }) {
             </RadioGroup>
           </FormControl>
         </Card>
-        <hr />
         <Card className="filter search-status">
           <FormControl component="fieldset">
             <FormLabel className="title-filter status-campaign">
-              {t('messageType')}
+              {t('typeMessage')}
             </FormLabel>
             <RadioGroup
-              className="radio-group"
               aria-label="gender"
-              name="messageType"
-              value={search.messageType}
+              name="typeMessage"
+              value={search.typeMessage}
               onChange={onChangeSearch}
             >
               <FormControlLabel
@@ -156,29 +200,27 @@ export default function SearchCampaign({ search, setSearch, setPage }) {
                 label={t('total')}
               />
               <FormControlLabel
-                value="msg_text"
+                value="text"
                 control={<Radio />}
-                label={t('msg_text')}
+                label={t('text')}
               />
               <FormControlLabel
-                value="msg_voice"
+                value="speech"
                 control={<Radio />}
-                label={t('msg_voice')}
+                label={t('speech')}
               />
             </RadioGroup>
           </FormControl>
         </Card>
-        <hr />
         <Card className="filter search-status">
           <FormControl component="fieldset">
             <FormLabel className="title-filter status-campaign">
-              {t('messageObject')}
+              {t('objectMessage')}
             </FormLabel>
             <RadioGroup
-              className="radio-group"
               aria-label="gender"
-              name="messageObject"
-              value={search.messageObject}
+              name="objectMessage"
+              value={search.objectMessage}
               onChange={onChangeSearch}
             >
               <FormControlLabel
@@ -198,6 +240,30 @@ export default function SearchCampaign({ search, setSearch, setPage }) {
               />
             </RadioGroup>
           </FormControl>
+        </Card>
+        <Card className="filter search-datetime">
+          <DateTimePicker
+            inputVariant="outlined"
+            margin="normal"
+            label={t('to')}
+            format="yyyy-MM-dd"
+            value={search.timeStart}
+            onChange={(date) => onChangeTimeStart(date)}
+            className="datetime"
+            cancelLabel={t('cancel')}
+            okLabel={t('ok')}
+          />
+          <DateTimePicker
+            inputVariant="outlined"
+            margin="normal"
+            label={t('from')}
+            format="yyyy-MM-dd"
+            value={search.timeEnd}
+            className="datetime"
+            onChange={(date) => onChangeTimeEnd(date)}
+            cancelLabel={t('cancel')}
+            okLabel={t('ok')}
+          />
         </Card>
       </div>
     </SearchCampaignStyle>

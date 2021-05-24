@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { COLOR } from '../../styles/color';
-import { mainColors } from '../../themes/styleConstant';
 
 export default styled.div`
   .message-chat {
@@ -11,7 +10,7 @@ export default styled.div`
   .header-chat {
     display: flex;
     align-items: center;
-    background-color: ${mainColors.havelockBlue};
+    background-color: ${COLOR.blue[500]};
     height: 50px;
     color: white;
   }
@@ -20,7 +19,7 @@ export default styled.div`
     padding: 10px;
     width: 90%;
     box-shadow: none;
-    background-color: ${mainColors.havelockBlue};
+    background-color: ${COLOR.blue[500]};
   }
   .avatar {
     width: 60px;
@@ -36,7 +35,7 @@ export default styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    /* margin: 10px; */
+    margin: 10px;
   }
   .message-text {
     padding: 10px 20px;

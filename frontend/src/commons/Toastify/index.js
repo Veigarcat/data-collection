@@ -7,7 +7,7 @@ export const toastError = (error) => {
   }
   if (message !== 'undefined' && message !== null && message !== '') {
     toast.error(message, {
-      position: toast.POSITION.BOTTOM_LEFT,
+      position: toast.POSITION.TOP_RIGHT,
     });
   }
 };
@@ -15,15 +15,7 @@ export const toastError = (error) => {
 export const toastSuccess = (msg) => {
   if (msg !== 'undefined' && msg !== null && msg !== '') {
     toast.success(msg, {
-      position: toast.POSITION.BOTTOM_LEFT,
-    });
-  }
-};
-
-export const toastWarning = (msg) => {
-  if (msg !== 'undefined' && msg !== null && msg !== '') {
-    toast.warning(msg, {
-      position: toast.POSITION.BOTTOM_LEFT,
+      position: toast.POSITION.TOP_RIGHT,
     });
   }
 };
@@ -31,7 +23,7 @@ export const toastWarning = (msg) => {
 export const toastMsgError = (msg) => {
   if (msg !== 'undefined' && msg !== null && msg !== '') {
     toast.error(msg, {
-      position: toast.POSITION.BOTTOM_LEFT,
+      position: toast.POSITION.TOP_RIGHT,
     });
   }
 };

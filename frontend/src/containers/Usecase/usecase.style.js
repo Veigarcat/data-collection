@@ -1,62 +1,59 @@
 import styled from 'styled-components';
 import { COLOR } from '../../styles/color';
-import { mainColors } from '../../themes/styleConstant';
 
 export default styled.div`
   .usecase {
     margin: 10px;
     height: calc(100vh - 95px);
+    position: relative;
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
   }
   .title-usecase {
-    text-transform: uppercase;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    background-color: ${COLOR.gray[1000]};
+    color: black;
+    text-transform: capitalize;
   }
   .desc-usecase {
     text-align: center;
-    padding: 5px 10px;
+    padding: 10px 20px;
     border-radius: none;
-    .detail-desc-usecase {
-      text-align: left;
-    }
   }
-  .tab-panel {
-    display: flex;
-    flex-flow: column;
-    height: 100%;
-    padding: 0%;
-  }
-  .content-main {
-    height: calc(100vh - 164px);
-    overflow: auto;
-  }
-  .content-main::-webkit-scrollbar {
-    width: 5px;
-  }
-  /* Track */
-  .content-main::-webkit-scrollbar-track::-webkit-scrollbar-track {
-    background: ${COLOR.gray[200]};
-  }
-  /* Handle */
-  .content-main::-webkit-scrollbar-thumb {
-    background: ${COLOR.gray[200]};
+  .detail-desc-usecase {
+    text-align: left;
   }
   .intent {
     text-align: center;
-    padding: 5px 10px;
-    flex-grow: 1;
-    .intent-detail {
-      text-align: left;
-    }
+    padding: 5px 20px;
+  }
+  .intent-detail {
+    text-align: left;
+    overflow-y: auto;
   }
   .discussion-container {
-    padding-bottom: 10px;
+    padding: 10px;
   }
-  .item-question {
-    padding-bottom: 10px;
+  .detail-discussion {
+    height: 180px;
   }
-
+  .detail-question {
+    height: 180px;
+  }
+  .intent-detail::-webkit-scrollbar {
+    width: 10px;
+  }
+  /* Track */
+  .intent-detail::-webkit-scrollbar-track::-webkit-scrollbar-track {
+    background: ${COLOR.gray[200]};
+  }
+  /* Handle */
+  .intent-detail::-webkit-scrollbar-thumb {
+    background: ${COLOR.gray[500]};
+  }
   .number-detail {
     display: flex;
     justify-content: space-around;
@@ -78,29 +75,16 @@ export default styled.div`
     border-radius: 50%;
     color: black;
   }
-  .button-convert {
-    background-color: ${mainColors.buttercup};
-    color: white;
-  }
-  .button-end {
-    color: green;
-  }
-  .header {
-    position: relative;
-    height: auto;
-  }
-  .MuiTabs-flexContainer {
-    display: flex;
-    align-items: center;
+  .footer-usecase {
+    margin: 15px 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
   .button {
-    position: absolute;
-    align-items: center;
-    justify-content: center;
+    margin-right: 20px;
   }
-  @media (max-width: 992px) {
-    .text-button {
-      display: none;
-    }
+  .item-question {
+    padding: 10px;
   }
 `;

@@ -5,15 +5,12 @@ import {
   InputAdornment,
   IconButton,
   Popover,
-  Tooltip,
-  Icon,
 } from '@material-ui/core';
-import { AttachFile, EmojiEmotions } from '@material-ui/icons';
+import { AttachFile, EmojiEmotions, Send } from '@material-ui/icons';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
-import MessageInputStyle from './messageInput.style';
 
-export default function MessageInput({ sendMessage }) {
+const MessageInput = ({ sendMessage }) => {
   const [text, setText] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -42,47 +39,40 @@ export default function MessageInput({ sendMessage }) {
   );
 
   return (
-    <MessageInputStyle>
-      <div className="message-input-container">
-        <div className="icon-wrap">
-          <Tooltip title={t('Kết thúc phiên chat')} placement="top">
-            <Icon className="parameter__icon end-chat">logout</Icon>
-          </Tooltip>
-        </div>
-
-        <TextField
-          multiline
-          rowsMax={2}
-          variant="outlined"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKeyPress}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton>
-                  <AttachFile color="primary" />
-                </IconButton>
-                <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-                  <EmojiEmotions color="primary" />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Popover
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          onClose={() => setAnchorEl(null)}
-        >
-          {emojiMart}
-        </Popover>
-        <div className="icon-wrap">
-          <Tooltip title={t('Gửi tin nhắn')} placement="top">
-            <Icon className="parameter__icon send">send</Icon>
-          </Tooltip>
-        </div>
-      </div>
-    </MessageInputStyle>
+    <>
+      <TextField
+        multiline
+        rowsMax={3}
+        variant="outlined"
+        fullWidth
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={handleKeyPress}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton>
+                <AttachFile color="primary" />
+              </IconButton>
+              <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+                <EmojiEmotions color="primary" />
+              </IconButton>
+              <IconButton onClick={handleSendMessage}>
+                <Send color="primary" />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+      >
+        {emojiMart}
+      </Popover>
+    </>
   );
-}
+};
+
+export default MessageInput;

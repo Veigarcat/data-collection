@@ -18,22 +18,83 @@ export default styled.div`
     border-radius: 6px;
     padding: 10px 15px 15px;
   }
-  .table-container {
-    width: 87%;
-    margin: 0 auto;
+  .select-usecase {
+    width: 60%;
   }
-  .table {
+  .title-name-usecase {
+    text-align: center;
+  }
+  .add-usecase {
+    margin: 20px auto;
+    padding: 30px;
+    width: 60%;
+    border: 1px solid ${COLOR.gray[400]};
+    border-radius: 20px;
+  }
+  .usecase-name {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .input-title {
+    width: 20%;
+  }
+  .form-control-name-usecase {
     width: 100%;
+  }
+  .input-name-usecase {
+    width: 100%;
+    border: 1px solid ${COLOR.gray[400]};
+    padding: 5px 10px;
   }
   .add-intent {
     display: flex;
     align-items: center;
+    width: 100%;
   }
-  .title-name-list-intent {
-    text-align: center;
+  .add-participant {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .select-participant {
+    width: 40%;
+  }
+  .number-participant {
+    margin: 0 20px;
+    display: flex;
+  }
+  .number-format {
+    margin-top: 6px;
+  }
+  .usecase-desc {
+    display: flex;
+    align-items: center;
     margin-top: 20px;
   }
-  .select-container {
+  .name-intent {
+    margin-top: 20px;
+  }
+  .table-container {
+    width: 80%;
+    margin: 20px;
+  }
+  .table {
+    width: 100%;
+  }
+  .button-add-intent {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+  }
+  .email-participant {
+    margin: 0 20px;
+    display: flex;
+    width: 50%;
     flex: 1 1 0%;
+  }
+  .form-control {
+    margin-left: 15px;
+    width: 70%;
   }
 `;

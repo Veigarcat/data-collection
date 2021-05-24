@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { COLOR } from '../../../styles/color';
-import { mainColors, colorStyleMap } from '../../../themes/styleConstant';
+
+// import { mainColors } from '../../../constants/styleConstant';
 
 export default styled.div`
   .wrapper {
     display: flex;
     flex-grow: 1;
-    height: calc(100vh - 215px);
+    height: calc(100vh - 199px);
     overflow: auto;
   }
   .list {
@@ -45,15 +46,15 @@ export default styled.div`
     padding: 8px;
     word-break: break-word;
     white-space: pre-line;
-    background-color: ${mainColors.froly};
-    color: white;
+    background-color: ${COLOR.gray[200]};
   }
   .message-server {
     border-radius: 10px;
     padding: 8px;
     word-break: break-word;
     white-space: pre-line;
-    background-color: ${colorStyleMap.GRAY.backgroundColor};
+    background-color: #4991e2;
+    color: white;
   }
   .media {
     max-width: 100%;
@@ -64,6 +65,7 @@ export default styled.div`
     padding: 2;
   }
   .comment {
+    margin-top: 5px;
     max-width: 80%;
     margin-left: 25px;
   }
@@ -91,46 +93,21 @@ export default styled.div`
   .icon-favorite {
     color: ${COLOR.red[600]};
   }
-  .list-item-text {
-    display: flex;
-    &:hover {
-      .response-right {
-        opacity: 1;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        margin-left: 10px;
-      }
-    }
-  }
-  .MuiListItemText-root {
-    max-width: 80%;
-  }
   .response-right {
-    width: 100px;
     display: flex;
-    opacity: 0;
     justify-content: flex-start;
     align-items: center;
-    margin-left: 10px;
-  }
-  .heart-comment-icon {
+    width: 50px;
     height: 20px;
-    margin-top: -5px;
-    display: flex;
-    justify-content: center;
+    margin-left: 20px;
   }
-  .parameter__icon {
-    cursor: pointer;
-    margin-left: 1px;
-    &.success {
-      color: #4caf50;
-    }
-    &.heart {
-      color: ${mainColors.froly};
-    }
-    &.review {
-      color: ${mainColors.havelockBlue};
-    }
+  .icon-unlike {
+    color: ${COLOR.red[600]};
   }
+  .comment-icon {
+    color: ${COLOR.blue[600]};
+  }
+  /* .list-item-text {
+    width: 80%;
+  } */
 `;

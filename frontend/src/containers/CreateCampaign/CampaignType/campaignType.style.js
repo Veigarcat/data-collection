@@ -18,17 +18,10 @@ export default styled.div`
     border-radius: 6px;
     padding: 10px 15px 15px;
   }
-  .form-control-radio {
-    width: 100%;
-  }
-  .radio-group {
-    width: 100%;
-  }
   .form-control-label {
-    width: 50%;
-    margin: 0px;
+    width: 45%;
   }
-  .type-campaign {
-    width: 30%;
+  .grid-content {
+    padding-left: 20px;
   }
 `;

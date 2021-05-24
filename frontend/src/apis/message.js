@@ -1,11 +1,11 @@
 import api from './api';
 
-export async function getSkipMessage({ appId, ssoUserId, campaignId }) {
+export async function getSkipMessage({ appId, userId, messageId, limit }) {
   try {
     const response = await api({
       method: 'GET',
-      url: '/message/list-message',
-      params: { appId, ssoUserId, campaignId },
+      url: '/skip-message',
+      params: { appId, userId, messageId, limit },
     });
     return response;
   } catch (error) {
@@ -13,12 +13,19 @@ export async function getSkipMessage({ appId, ssoUserId, campaignId }) {
   }
 }
 
-export async function createMessage(message) {
+export async function createMessage({
+  userId,
+  messageId,
+  appId,
+  campaignId,
+  textComment,
+  isConfirm,
+}) {
   try {
     const response = await api({
       method: 'POST',
       url: '/message/create',
-      data: message,
+      data: { userId, appId, messageId, campaignId, textComment, isConfirm },
     });
     return response;
   } catch (error) {
@@ -26,38 +33,12 @@ export async function createMessage(message) {
   }
 }
 
-export async function updateMessage({ messageId, textComment, nlu }) {
+export async function updateMessage({ id, textComment, isConfirm }) {
   try {
     const response = await api({
       method: 'POST',
       url: '/message/update',
-      data: { messageId, textComment, nlu },
-    });
-    return response;
-  } catch (error) {
-    return error.response;
-  }
-}
-
-export async function updateIsConfirmMessage({ messageId, isConfirm }) {
-  try {
-    const response = await api({
-      method: 'POST',
-      url: '/message/update-confirm',
-      data: { messageId, isConfirm },
-    });
-    return response;
-  } catch (error) {
-    return error.response;
-  }
-}
-
-export async function getCountMsgConfirm({ intentId, campaignId, ssoUserId }) {
-  try {
-    const response = await api({
-      method: 'GET',
-      url: '/message/count-msg-confirm',
-      params: { intentId, campaignId, ssoUserId },
+      data: { id, textComment, isConfirm },
     });
     return response;
   } catch (error) {

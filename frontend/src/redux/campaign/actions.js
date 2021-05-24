@@ -6,13 +6,16 @@ export const actionTypes = {
   FETCH_CAMPAIGN_SUCCESS: 'FETCH_CAMPAIGN_SUCCESS',
   FETCH_CAMPAIGN_FAILED: 'FETCH_CAMPAIGN_FAILED',
 
+  USER_JOIN_CAMPAIGN: 'USER_JOIN_CAMPAIGN',
+  USER_JOIN_CAMPAIGN_SUCCESS: 'USER_JOIN_CAMPAIGN_SUCCESS',
+
+  USER_LEAVE_CAMPAIGN: 'USER_LEAVE_CAMPAIGN',
+  USER_LEAVE_CAMPAIGN_SUCCESS: 'USER_LEAVE_CAMPAIGN_SUCCESS',
+
   FILTER_SEARCH: 'FILTER_SEARCH',
 
   CREATE_CAMPAIGN: 'CREATE_CAMPAIGN',
-  HANDLE_CAMPAIGN_SUCCESS: 'HANDLE_CAMPAIGN_SUCCESS',
-
-  EDIT_CAMPAIGN: 'EDIT_CAMPAIGN',
-  DELETE_CAMPAIGN: 'DELETE_CAMPAIGN',
+  CREATE_CAMPAIGN_SUCCESS: 'CREATE_CAMPAIGN_SUCCESS',
 };
 
 export const callApiGetDataCampaign = (data) => {
@@ -54,6 +57,31 @@ export const fetchListCampaignFailed = (error) => {
   };
 };
 
+export const userJoinCampaign = (data) => {
+  return {
+    type: actionTypes.USER_JOIN_CAMPAIGN,
+    payload: data,
+  };
+};
+export const userJoinCampaignSuccess = (data) => {
+  return {
+    type: actionTypes.USER_JOIN_CAMPAIGN_SUCCESS,
+    payload: data,
+  };
+};
+
+export const userLeaveCampaign = (data) => {
+  return {
+    type: actionTypes.USER_LEAVE_CAMPAIGN,
+    payload: data,
+  };
+};
+export const userLeaveCampaignSuccess = (data) => {
+  return {
+    type: actionTypes.USER_LEAVE_CAMPAIGN_SUCCESS,
+    payload: data,
+  };
+};
 export const filterCampaign = (data) => {
   return {
     type: actionTypes.FILTER_SEARCH,
@@ -67,22 +95,9 @@ export const fetchCreateCampaign = (data) => {
   };
 };
 
-export const fetchHandleCampaignSuccess = (payload) => {
+export const fetchCreateCampaignSuccess = (payload) => {
   return {
-    type: actionTypes.HANDLE_CAMPAIGN_SUCCESS,
-    payload,
-  };
-};
-
-export const fetchEditCampaign = (data) => {
-  return {
-    type: actionTypes.EDIT_CAMPAIGN,
-    payload: data,
-  };
-};
-export const fetchDeleteCampaign = (payload) => {
-  return {
-    type: actionTypes.DELETE_CAMPAIGN,
+    type: actionTypes.CREATE_CAMPAIGN_SUCCESS,
     payload,
   };
 };

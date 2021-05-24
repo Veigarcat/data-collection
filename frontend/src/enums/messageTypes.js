@@ -1,7 +1,7 @@
 const messageTypes = {
   TEXT: 'TEXT',
   IMAGE: 'IMAGE',
-  VOICE: 'VOICE',
+  AUDIO: 'AUDIO',
   VIDEO: 'VIDEO',
   OPTION: 'OPTION',
   CATALOGUE: 'CATALOGUE',

@@ -10,38 +10,20 @@ import MessageInput from './MessageInput';
 import { SOCKET_URL, APP_ID } from '../../configs';
 import websocket from '../../enums/websocket';
 import MessageChatStyle from './messageChat.style';
-import {
-  addMessage,
-  updateNluMessage,
-  getListMessage,
-} from '../../redux/message/actions';
-import { apiUpdateResult } from '../../apis/result';
-import { STATUS_RESULT, CAMPAIGN_TYPE } from '../../constants/params';
-import { getCountMsgConfirm } from '../../apis/message';
+import { addMessage } from '../../redux/message/actions';
 
-const MessageChat = ({
-  dataInfoCampaign,
-  question,
-  confirm,
-  dataChatInfo,
-  setDataChatInfo,
-}) => {
+const MessageChat = ({ dataInfoCampaign }) => {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.message.arrMessage);
-  const { ssoUserId, userId } = useSelector((state) => state.auth);
+  const { userId } = useSelector((state) => state.auth);
 
   const [isTopScroll, setIsTopScroll] = useState(false);
   const [endScroll, setEndScroll] = useState(0);
   const [scrollBottom, setScrollBottom] = useState(0);
-  const [msgId, setMsgId] = useState('');
-
+  // const [accessTokenChat, setAccessTokenChat] = useState('');
   const [totalMessage] = useState(100);
+
   const rws = useRef(null);
-  const currentDataInfoCampaign = useRef(dataInfoCampaign);
-  const currentQuestion = useRef(question);
-  const currentConfirm = useRef(confirm);
-  const currentMsgId = useRef(msgId);
-  const currentDataChatInfoting = useRef(dataChatInfo);
 
   const sendMessage = async (message) => {
     const msg = {
@@ -52,107 +34,21 @@ const MessageChat = ({
         msgId: uuidv4(),
       },
     };
-    setMsgId(msg.message.msgId);
     rws.current.send(JSON.stringify(msg));
+
     dispatch(
       addMessage({
         messageId: msg.message.msgId,
         content: { text: message.text },
-        appId: dataInfoCampaign.appId,
-        sender: { user: ssoUserId },
-        campaignId: dataInfoCampaign.id,
+        appId: APP_ID,
+        sender: { user: userId },
+        campaignId: '604b2371b13db9396ca755c5',
+        userId,
       }),
     );
     setIsTopScroll(false);
     setEndScroll(0);
   };
-  const getInfoConfirmMsg = async (intentId) => {
-    // Nếu ý định ddax hỏi
-    const indexMsgByIntentConfirm = currentConfirm.current.findIndex(
-      (item) => item.id === intentId,
-    );
-    if (indexMsgByIntentConfirm >= 0) {
-      const { result } = await getCountMsgConfirm({
-        intentId,
-        campaignId: currentDataInfoCampaign.current.id,
-        ssoUserId,
-      });
-      if (result) {
-        const newConfirm = [...currentConfirm.current];
-        newConfirm[indexMsgByIntentConfirm] = {
-          ...currentConfirm.current[indexMsgByIntentConfirm],
-          ...result,
-        };
-        setDataChatInfo({
-          ...currentDataChatInfoting.current,
-          confirm: newConfirm,
-        });
-      }
-    }
-  };
-  const handleMsgAttachIntent = async ({ intentId }) => {
-    // Nếu ý định chưa hỏi
-    const msgByIntentQuestion = currentDataChatInfoting.current.question.find(
-      (item) => item.id === intentId,
-    );
-    const arrQuestion = currentDataChatInfoting.current.question.filter(
-      (item) => item.id !== intentId,
-    );
-    if (msgByIntentQuestion) {
-      apiUpdateResult({
-        campaignId: currentDataInfoCampaign.current.id,
-        userId,
-        usecaseId:
-          currentDataInfoCampaign.current.collectType.toUpperCase() ===
-          CAMPAIGN_TYPE.USECASE
-            ? currentDataChatInfoting.current.id
-            : null,
-        type: currentDataInfoCampaign.current.collectType,
-        data: {
-          id: intentId,
-          status: STATUS_RESULT.PROCESSING,
-        },
-      });
-      setDataChatInfo({
-        ...currentDataChatInfoting.current,
-        question: arrQuestion,
-        confirm: [
-          ...currentDataChatInfoting.current.confirm,
-          { ...msgByIntentQuestion, sumMsgConfirm: 0, sumMsg: 1 },
-        ],
-      });
-    }
-    getInfoConfirmMsg(intentId);
-  };
-
-  useEffect(() => {
-    currentDataInfoCampaign.current = dataInfoCampaign;
-    if (dataInfoCampaign.appId) {
-      dispatch(
-        getListMessage({
-          appId: dataInfoCampaign.appId,
-          ssoUserId,
-          campaignId: dataInfoCampaign.id,
-        }),
-      );
-    }
-  }, [dataInfoCampaign]);
-
-  useEffect(() => {
-    currentDataChatInfoting.current = dataChatInfo;
-  }, [dataChatInfo]);
-
-  useEffect(() => {
-    currentQuestion.current = question;
-  }, [question]);
-
-  useEffect(() => {
-    currentConfirm.current = confirm;
-  }, [confirm]);
-
-  useEffect(() => {
-    currentMsgId.current = msgId;
-  }, [msgId]);
 
   useEffect(() => {
     rws.current = new WebSocket(SOCKET_URL);
@@ -169,37 +65,21 @@ const MessageChat = ({
       const { type, status, data } = responseData;
       switch (type) {
         case websocket.types.AGENT_INIT:
+          // setAccessTokenChat(responseData.access_token);
           break;
         case websocket.types.CHAT:
           if (status) {
-            if (currentMsgId.current && data.nlu && data.nlu.intent) {
-              const { intent } = data.nlu;
-              dispatch(
-                updateNluMessage({
-                  messageId: currentMsgId.current,
-                  nlu: data.nlu.intent,
-                }),
-              );
-              if (intent.intent_id) {
-                handleMsgAttachIntent({ intentId: intent.intent_id });
-              }
-            }
             dispatch(
               addMessage({
                 content: data.message,
                 messageId: data.msg_id,
                 sender: data.sender,
-                receiver: {
-                  user: ssoUserId,
-                },
-                appId: currentDataInfoCampaign.current.appId,
-                campaignId: currentDataInfoCampaign.current.id,
-                nlu: data.nlu && data.nlu.intent ? data.nlu.intent : null,
+                appId: APP_ID,
+                campaignId: '604b2371b13db9396ca755c5',
               }),
             );
             setIsTopScroll(false);
             setEndScroll(0);
-            setMsgId('');
           }
           break;
         default:
@@ -227,6 +107,8 @@ const MessageChat = ({
   const scrollMessage = async (element) => {
     const { scrollHeight, scrollTop, clientHeight } = element;
     setEndScroll(scrollHeight - scrollTop - clientHeight);
+    console.log('send message', scrollTop, scrollHeight, clientHeight);
+
     if (scrollTop === 0 && messages.length < totalMessage) {
       setIsTopScroll(true);
       setScrollBottom(scrollHeight);
@@ -251,7 +133,6 @@ const MessageChat = ({
           today={today}
           scrollMessage={scrollMessage}
           handleSendMessage={sendMessage}
-          getInfoConfirmMsg={getInfoConfirmMsg}
         />
         <MessageInput sendMessage={sendMessage} />
       </Card>

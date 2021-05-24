@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import MessageChat from '../containers/MessageChat';
 import Usecase from '../containers/Usecase';
-import Intent from '../containers/Intent';
+import NavigationContainer from '../containers/Dashboard/Navigation';
 import { apiGetDataCampaign } from '../apis/campaign';
-import { CAMPAIGN_TYPE } from '../constants/params';
-import { renderAutoChatInfo } from '../apis/chatInfo';
+import routes from '../constants/route';
 
 export default function ChatBot() {
   const { campaignId } = useParams();
-  const { userId } = useSelector((state) => state.auth);
-
   const [dataInfoCampaign, setDataInfoCampaign] = useState({});
-  const [dataChatInfo, setDataChatInfo] = useState([]);
-  const [confirm, setConfirm] = useState([]);
-  const [question, setQuestion] = useState([]);
+  let navLink;
 
   useEffect(() => {
     apiGetDataCampaign(campaignId)
@@ -26,51 +20,32 @@ export default function ChatBot() {
       .catch((e) => {
         console.log(e);
       });
-    renderAutoChatInfo({ campaignId, userId })
-      .then((res) => {
-        setDataChatInfo(res.result);
-      })
-      .catch((err) => console.log(err));
   }, []);
+  if (dataInfoCampaign) {
+    navLink = [
+      {
+        title: 'Home',
+        link: routes.HOME,
+      },
+      {
+        title: dataInfoCampaign.name,
+        link: `/home/${campaignId}/info-campaign`,
+      },
+      {
+        title: 'Chat Bot',
+      },
+    ];
+  }
 
-  useEffect(() => {
-    if (dataChatInfo) {
-      setConfirm(dataChatInfo.confirm);
-      setQuestion(dataChatInfo.question);
-    }
-  }, [dataChatInfo]);
   return (
     <div>
+      <NavigationContainer navLink={navLink} />
       <Grid container>
-        <Grid item xs={12} sm={6} md={6} ld={6} xl={6}>
-          <MessageChat
-            dataInfoCampaign={dataInfoCampaign}
-            setDataInfoCampaign={setDataInfoCampaign}
-            question={question}
-            confirm={confirm}
-            dataChatInfo={dataChatInfo}
-            setDataChatInfo={setDataChatInfo}
-          />
+        <Grid item xs={6} sm={6}>
+          <MessageChat dataInfoCampaign={dataInfoCampaign} />
         </Grid>
-        <Grid item sm={6} ld={6} xl={6} md={6}>
-          {dataChatInfo && dataChatInfo.type === CAMPAIGN_TYPE.USECASE && (
-            <Usecase
-              dataChatInfo={dataChatInfo}
-              setDataChatInfo={setDataChatInfo}
-              campaignId={campaignId}
-              userId={userId}
-              campaign={dataInfoCampaign}
-              question={question}
-              confirm={confirm}
-            />
-          )}
-          {dataChatInfo && dataChatInfo.type === CAMPAIGN_TYPE.INTENT && (
-            <Intent
-              dataChatInfo={dataChatInfo}
-              question={question}
-              confirm={confirm}
-            />
-          )}
+        <Grid item xs={6} sm={6}>
+          <Usecase />
         </Grid>
       </Grid>
     </div>

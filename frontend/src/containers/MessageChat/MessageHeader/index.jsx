@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
 import React, { useState } from 'react';
-import { Card, Link, Avatar, Menu, MenuItem } from '@material-ui/core';
+import { Card, Typography, Avatar, Menu, MenuItem } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MessageHeaderStyle from './messageHeader.style';
 
@@ -11,7 +10,6 @@ export default function MessageHeader({ dataInfoCampaign }) {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { campaignId } = useParams();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -23,25 +21,17 @@ export default function MessageHeader({ dataInfoCampaign }) {
     <MessageHeaderStyle>
       <Card className="header-chat">
         <Card className="user-chat">
-          <Link
-            href={`/home/${campaignId}/info-campaign`}
-            color="inherit"
-            underline="none"
+          <Avatar
+            className="campaign-avatar"
+            alt="campaign name"
+            src="https://infofinance.vn/wp-content/uploads/2020/01/cach-huy-dich-vu-sms-chu-dong-cua-vietcombank.png"
           >
-            <Avatar
-              className="campaign-avatar"
-              alt="campaign name"
-              src="https://infofinance.vn/wp-content/uploads/2020/01/cach-huy-dich-vu-sms-chu-dong-cua-vietcombank.png"
-            />
-          </Link>
+            {dataInfoCampaign && dataInfoCampaign.name}
+          </Avatar>
           <div className="info-user-chat-header">
-            <Link
-              href={`/home/${campaignId}/info-campaign`}
-              color="inherit"
-              underline="none"
-            >
+            <Typography variant="h4" component="h2">
               {dataInfoCampaign && dataInfoCampaign.name}
-            </Link>
+            </Typography>
           </div>
         </Card>
         <IconButton
@@ -61,15 +51,7 @@ export default function MessageHeader({ dataInfoCampaign }) {
         >
           <MenuItem>{t('search')}</MenuItem>
           {/* <MenuItem onClick={handleShowSearch}>{t('search')}</MenuItem> */}
-          <MenuItem>
-            <Link
-              href={`/${campaignId}/result-user`}
-              color="inherit"
-              underline="none"
-            >
-              {t('progress')}
-            </Link>
-          </MenuItem>
+          <MenuItem>{t('progress')}</MenuItem>
         </Menu>
       </Card>
     </MessageHeaderStyle>

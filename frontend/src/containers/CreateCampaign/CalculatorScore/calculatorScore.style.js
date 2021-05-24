@@ -38,8 +38,8 @@ export default styled.div`
     margin: 0 10px;
   }
   .table-container {
-    width: 90%;
-    margin: 0 auto;
+    width: 80%;
+    margin: 20px auto;
   }
   .table {
     width: 100%;
